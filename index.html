@@ -16,6 +16,20 @@
 @media(min-width:701px) and (max-height:850px){.cover{padding-top:26px}.cover-stage{min-height:280px}.cover-title{font-size:68px}.cover-art{height:260px}.cover-actions{margin:18px 0}.cover details{padding:10px 18px}.cover ol{font-size:18px;line-height:1.6}}
 .odds{font-size:17px!important;color:#52616c;margin-top:10px!important}
 .outcome strong.ending-good{color:var(--green)}.outcome strong.ending-bad{color:var(--red)}
+
+/* 淡出後再更新內容，避免切題或公布時整塊畫面突然跳換。 */
+.scene-leaving{animation:scene-out 140ms ease-in both;pointer-events:none}
+.scene-entering{animation:scene-in 260ms ease-out both;pointer-events:none}
+.outcome{animation:ending-in 320ms ease-out both}
+.choice:nth-child(2) .outcome{animation-delay:50ms}
+.progress div{transition:width 350ms ease}
+button{transition:transform 150ms ease,box-shadow 150ms ease,background-color 150ms ease}
+button:not(:disabled):hover{transform:translateY(-2px);box-shadow:0 4px 10px #172d4018}
+button:not(:disabled):active{transform:translateY(0) scale(.98);box-shadow:none}
+@keyframes scene-out{from{opacity:1;transform:translateY(0)}to{opacity:0;transform:translateY(-6px)}}
+@keyframes scene-in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ending-in{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.scene-leaving,.scene-entering,.outcome{animation:none!important}button,.progress div{transition:none!important}button:not(:disabled):hover,button:not(:disabled):active{transform:none}}
 </style>
 </head>
 <body>
@@ -31,7 +45,7 @@
 <p id="status" class="status">各組選好了嗎？由主持人決定何時揭曉。</p>
 <nav aria-label="主持人操作"><button id="prev" type="button">上一題</button><button id="reveal" type="button">公布答案</button><button id="next" type="button">下一題</button></nav>
 </div>
-<footer><span>情境、結局與機率皆為遊戲設定</span><span>v0.5.1 · 共 8 題</span></footer>
+<footer><span>情境、結局與機率皆為遊戲設定</span><span>v0.6.1 · 共 8 題</span></footer>
 </main>
 <script>
 // 每個選項都有好壞兩種故事；機率是遊戲設定，並非真實事故率。
@@ -256,7 +270,7 @@ function render(){
   $('choices').append(card);
  });
  $('reason').hidden = !revealed;
- $('reason').textContent = revealed ? `資安提醒：${q.reason}` : '';
+ $('reason').textContent = revealed ? q.reason : '';
  $('status').textContent = !revealed ? '選好了嗎？答案公布後就不能反悔囉！' : (alternate ? '如果真相不同，故事也會不一樣。這組不計分。' : (current === questions.length-1 ? '最後一題！加總分數，看看哪隊獲勝。' : '好結局的隊伍加 1 分！記好分數，再迎接下一題。'));
  $('prev').disabled = current === 0;
  $('next').disabled = current === questions.length-1;
@@ -264,20 +278,47 @@ function render(){
  $('reveal').textContent = revealed ? (alternate ? '返回第一組結局' : '查看另一組結局') : '公布答案';
 }
 function closeRules(){ $('rules').open = false; window.scrollTo(0,0); }
+// 轉場期間忽略連點，避免一次切過兩題或跳過結局。
+let transitioning = false;
+function transitionTo(update){
+ if(transitioning) return;
+ if(window.matchMedia('(prefers-reduced-motion: reduce)').matches){update();return;}
+ transitioning=true;
+ const oldScene=$('cover').hidden ? $('game') : $('cover');
+ oldScene.setAttribute('aria-busy','true');
+ oldScene.classList.add('scene-leaving');
+ setTimeout(()=>{
+  update();
+  oldScene.classList.remove('scene-leaving');
+  oldScene.removeAttribute('aria-busy');
+  const newScene=$('cover').hidden ? $('game') : $('cover');
+  newScene.classList.add('scene-entering');
+  newScene.setAttribute('aria-busy','true');
+  setTimeout(()=>{
+   newScene.classList.remove('scene-entering');
+   newScene.removeAttribute('aria-busy');
+   transitioning=false;
+  },360);
+ },140);
+}
 // 開始遊戲一律從第一題重來；返回封面可再次查看規則。
-$('start').addEventListener('click',()=>{
+$('start').addEventListener('click',()=>transitionTo(()=>{
  current=0;revealed=false;alternate=false;results=[];closeRules();render();
  $('cover').hidden=true;$('game').hidden=false;$('home').hidden=false;
  $('title').focus();
-});
-$('home').addEventListener('click',()=>{
+}));
+$('home').addEventListener('click',()=>transitionTo(()=>{
  $('game').hidden=true;$('cover').hidden=false;$('home').hidden=true;
  window.scrollTo(0,0);$('cover-title').focus();
-});
-$('prev').addEventListener('click',()=>{if(current>0){current--;revealed=false;alternate=false;closeRules();render();}});
-$('next').addEventListener('click',()=>{if(current<questions.length-1){current++;revealed=false;alternate=false;closeRules();render();}});
+}));
+$('prev').addEventListener('click',()=>{if(current>0)transitionTo(()=>{current--;revealed=false;alternate=false;closeRules();render();});});
+$('next').addEventListener('click',()=>{if(current<questions.length-1)transitionTo(()=>{current++;revealed=false;alternate=false;closeRules();render();});});
 function qDraw(){const aGood=isGood(Math.random(),questions[current].goodRates[0]);return [aGood,!aGood];}
-$('reveal').addEventListener('click',()=>{if(revealed){alternate=!alternate;closeRules();render();return;}if(!results[current]) results[current]=qDraw();revealed=true;closeRules();render();});
+$('reveal').addEventListener('click',()=>transitionTo(()=>{
+ if(revealed){alternate=!alternate;closeRules();render();return;}
+ if(!results[current]) results[current]=qDraw();
+ revealed=true;closeRules();render();
+}));
 render();
 </script>
 </body>
