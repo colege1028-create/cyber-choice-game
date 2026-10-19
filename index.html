@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>資安二選一｜生活情境團康</title>
+<style>
+:root{color-scheme:light;--ink:#172d40;--paper:#f4f2ec;--line:#d6dcd9;--green:#176342;--red:#a33136}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans TC",sans-serif;line-height:1.65}main{max-width:1180px;margin:auto;padding:26px 36px 36px}header{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid var(--ink);padding-bottom:14px;gap:20px}h1{font-size:26px;margin:0}header span{font-size:15px;color:#52616c}details{margin:16px 0;border:1px solid var(--line);border-radius:10px;background:#fff;padding:12px 18px}summary{cursor:pointer;font-size:19px;font-weight:650}ol{margin:10px 0;padding-left:26px;font-size:19px}.meta{display:flex;justify-content:space-between;margin-top:26px;font-size:18px;font-weight:650}.progress{height:5px;background:#d8ded9;margin-top:12px}.progress div{height:100%;background:var(--green)}h2{font-size:clamp(28px,3.2vw,40px);line-height:1.4;margin:22px 0 14px}.scene{font-size:clamp(23px,2.3vw,29px);margin:0 0 24px;line-height:1.7}.choices{display:grid;grid-template-columns:1fr 1fr;gap:20px}.choice{background:white;border:2px solid var(--line);border-radius:14px;padding:22px}.choice-head{display:flex;align-items:flex-start;gap:16px}.letter{display:grid;place-items:center;flex-shrink:0;width:45px;height:45px;border-radius:9px;background:#e9edf0;font-size:27px;font-weight:800}.option{font-size:clamp(21px,2.1vw,27px);margin:0;font-weight:600}.outcome{border-top:1px solid var(--line);margin-top:18px;padding-top:14px;font-size:22px}.outcome strong{display:block;margin-bottom:7px}.outcome p{margin:0}.choice.good{border-color:var(--green);background:#f0f8f0}.choice.bad{border-color:var(--red);background:#fff3f0}.good strong{color:var(--green)}.bad strong{color:var(--red)}.reason{font-size:22px;background:#e5ebe6;border-radius:10px;padding:16px 20px;margin-top:20px}.reason p{margin:4px 0 0}.status{font-size:18px;color:#53616b;margin:20px 0 12px}nav{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:16px}button{font:700 22px system-ui;min-height:60px;border:2px solid var(--ink);border-radius:10px;background:white;color:var(--ink);cursor:pointer;padding:12px}#reveal{background:var(--ink);color:white}button:disabled{opacity:.42;cursor:default}button:focus-visible,summary:focus-visible{outline:4px solid #cc8b00;outline-offset:4px}footer{display:flex;justify-content:space-between;margin-top:22px;font-size:14px;color:#596773}[hidden]{display:none!important}
+@media(max-width:700px){main{padding:18px 16px}header{align-items:flex-start}header span{max-width:120px;text-align:right}h1{font-size:22px}.choices{grid-template-columns:1fr}.choice{padding:18px}button{font-size:18px;padding:10px 4px}nav{gap:8px}.scene{font-size:23px}footer{gap:16px}}
+/* 低高度投影畫面縮減留白，保留文字可讀性。 */
+@media(min-width:701px) and (max-height:850px){main{padding:12px 28px}header{padding-bottom:8px}details{margin:10px 0;padding:8px 14px}.meta{margin-top:10px}h2{font-size:30px;margin:10px 0 8px}.scene{font-size:24px;line-height:1.5;margin-bottom:12px}.choice{padding:14px}.option{font-size:23px}.outcome{font-size:21px;margin-top:10px;padding-top:8px;line-height:1.5}.outcome strong{margin-bottom:4px}.reason{font-size:21px;padding:8px 16px;margin-top:10px;line-height:1.5}.status{margin:12px 0 8px}button{min-height:52px;padding:8px}footer{margin-top:12px}}
+
+/* 封面先介紹玩法，按開始後才顯示題目。圖案由 CSS 畫出，不需外部素材。 */
+.cover{padding:34px 0 12px}.cover-stage{display:grid;grid-template-columns:1.35fr 1fr;align-items:center;gap:44px;min-height:330px}.eyebrow{font-size:16px;font-weight:750;letter-spacing:.12em;margin:0 0 14px;color:#53616b}.cover-title{font-size:clamp(50px,6vw,76px);line-height:1.12;letter-spacing:-.04em;margin:0 0 18px}.cover-tagline{font-size:clamp(24px,2.7vw,34px);line-height:1.5;font-weight:700;margin:0 0 14px}.cover-description{font-size:21px;color:#53616b;margin:0;max-width:560px}.cover-art{position:relative;display:flex;justify-content:center;align-items:center;height:290px;gap:12px}.cover-card{display:flex;flex-direction:column;align-items:center;justify-content:center;width:145px;height:204px;border:3px solid var(--ink);border-radius:18px;background:#dce8eb;transform:rotate(-9deg);box-shadow:7px 9px 0 #172d4015}.cover-card:last-child{background:#f0dfb9;transform:rotate(9deg);margin-top:28px}.cover-card b{font-size:84px;line-height:1.1}.cover-card span{font-size:19px;font-weight:650;margin-top:12px}.cover-question{position:absolute;top:0;right:20px;width:51px;height:51px;display:grid;place-items:center;background:var(--ink);color:white;border-radius:50%;font-size:30px;font-weight:750}.cover-actions{margin:22px 0 20px;display:flex;align-items:center;gap:24px}.cover-actions button{background:var(--ink);color:white;min-width:220px}.cover-actions span{font-size:18px;color:#53616b}.cover details{margin:0}.home-button{font-size:15px;border:0;background:transparent;min-height:36px;padding:4px 8px;text-decoration:underline;text-underline-offset:4px}.header-side{display:flex;align-items:center;gap:18px}.cover h2:focus,.game h2:focus{outline:none}
+@media(max-width:700px){.cover{padding-top:28px}.cover-stage{grid-template-columns:1fr;gap:12px;min-height:0}.cover-art{height:190px;order:-1}.cover-card{width:100px;height:145px;border-radius:12px}.cover-card b{font-size:60px}.cover-card span{font-size:14px;margin-top:6px}.cover-question{right:20%;top:0;width:38px;height:38px;font-size:24px}.cover-title{font-size:48px}.cover-tagline{font-size:25px}.cover-description{font-size:19px}.cover-actions{flex-wrap:wrap;gap:12px}.cover-actions button{width:100%}.header-side{gap:5px;flex-direction:column;align-items:flex-end}.header-side span{font-size:13px}.home-button{font-size:14px}.cover ol{font-size:18px}}
+@media(min-width:701px) and (max-height:850px){.cover{padding-top:26px}.cover-stage{min-height:280px}.cover-title{font-size:68px}.cover-art{height:260px}.cover-actions{margin:18px 0}.cover details{padding:10px 18px}.cover ol{font-size:18px;line-height:1.6}}
+.odds{font-size:17px!important;color:#52616c;margin-top:10px!important}
+.outcome strong.ending-good{color:var(--green)}.outcome strong.ending-bad{color:var(--red)}
+</style>
+</head>
+<body>
+<main>
+<header><h1>資安二選一</h1><div class="header-side"><span>生活情境 × 團康問答</span><button id="home" class="home-button" type="button" hidden>返回封面</button></div></header>
+<section id="cover" class="cover" aria-labelledby="cover-title">
+<div class="cover-stage"><div><p class="eyebrow">生活資安情境挑戰</p><h2 id="cover-title" class="cover-title" tabindex="-1">資安二選一</h2><p class="cover-tagline">你的選擇，會是哪一種結局？</p><p class="cover-description">生活沒有絕對。<br>謹慎，可能錯過機會；冒險，也可能遇到好人。<br>這回合，判斷和運氣會站在你這邊嗎？</p></div><div class="cover-art" aria-hidden="true"><div class="cover-card"><b>A</b><span>你會怎麼選？</span></div><div class="cover-card"><b>B</b><span>結局等你揭曉</span></div><div class="cover-question">?</div></div></div>
+<div class="cover-actions"><button id="start" type="button">開始遊戲 →</button><span>選答案 → 公布答案 → 計分</span></div>
+<details id="rules"><summary>遊戲規則</summary><ol><li>看情境，各隊討論並選定 A 或 B。</li><li>公布答案，看看你們迎來好結局還是壞結局。</li><li>好結局得 1 分，壞結局得 0 分，各隊自行記分。以首次公布為準，另一組結局不計分。</li><li>玩完 8 題，最高分的隊伍獲勝！同分就一起贏。</li></ol></details>
+</section>
+<div id="game" class="game" hidden>
+<section aria-label="情境題目"><div class="meta"><span id="count"></span><span id="phase">討論時間</span></div><div class="progress" aria-hidden="true"><div id="bar"></div></div><h2 id="title" tabindex="-1"></h2><p id="scene" class="scene"></p><div id="choices" class="choices"></div><div id="reason" class="reason" hidden aria-live="polite"></div></section>
+<p id="status" class="status">各組選好了嗎？由主持人決定何時揭曉。</p>
+<nav aria-label="主持人操作"><button id="prev" type="button">上一題</button><button id="reveal" type="button">公布答案</button><button id="next" type="button">下一題</button></nav>
+</div>
+<footer><span>情境、結局與機率皆為遊戲設定</span><span>v0.5.1 · 共 8 題</span></footer>
+</main>
+<script>
+// 每個選項都有好壞兩種故事；機率是遊戲設定，並非真實事故率。
+const questions = [
+ {
+  "title": "演唱會最後一張票，要先匯嗎？",
+  "scene": "你在社群找到原價讓票。賣家給你訂單截圖，說還有別人在等，要你十分鐘內先匯款，收到錢才轉票。你會……",
+  "options": [
+   "截圖看起來沒問題，先匯款卡位。",
+   "先確認票券與轉讓方式，不急著匯款。"
+  ],
+  "correct": 1,
+  "reason": "截圖與限時壓力都不能證明賣家可信。私下先匯款有風險，應確認票券與交易保障。",
+  "outcomes": [
+   {
+    "good": "對方真的是臨時不能去的歌迷，收款後如約轉票，你順利進場。",
+    "bad": "截圖是偽造的，對方收款後封鎖你，你沒拿到票。"
+   },
+   {
+    "good": "查證時發現截圖有問題，你沒有匯款，避開假讓票。",
+    "bad": "對方確實有真票，但查證期間已賣給別人，你錯過原價票。"
+   }
+  ],
+  "goodRates": [
+   10,
+   90
+  ]
+ },
+ {
+  "title": "聲音明明就是室友啊！",
+  "scene": "陌生號碼來電，聲音很像室友：「我的手機沒電、錢包也不在身邊，借人手機打給你。能先匯三千讓我搭車回去嗎？」你會……",
+  "options": [
+   "先透過原有聯絡方式與共同朋友確認。",
+   "認得聲音，直接匯到他提供的帳戶。"
+  ],
+  "correct": 0,
+  "reason": "熟悉聲音也可能遭模仿。借款前交叉確認本人與需求；無法聯絡時可請共同朋友協助。",
+  "outcomes": [
+   {
+    "good": "共同朋友確認室友還在宿舍，來電是冒充的，你保住三千元。",
+    "bad": "來電真是室友，但查證時一直找不到人，他錯過末班車，多付一筆住宿費。"
+   },
+   {
+    "good": "來電真是室友，款項及時到帳，他順利搭車回家，隔天就還你錢。",
+    "bad": "來電是冒充室友的人，你匯款後對方失聯，錢也追不回來。"
+   }
+  ],
+  "goodRates": [
+   90,
+   10
+  ]
+ },
+ {
+  "title": "朋友的新遊戲，幫忙測一下？",
+  "scene": "朋友的帳號傳來試玩檔：「這是我做的遊戲，今晚前要交作業，幫忙下載跑一下！」檔案不在你熟悉的平台，你會……",
+  "options": [
+   "朋友需要幫忙，先下載執行再說。",
+   "先用原有電話確認是本人寄的再下載。"
+  ],
+  "correct": 1,
+  "reason": "熟悉的帳號也可能被盜用。執行非預期的檔案前，先確認寄件者、來源與用途。",
+  "outcomes": [
+   {
+    "good": "確實是朋友親手做的遊戲，你找到一個操作問題，幫他趕上繳交。",
+    "bad": "朋友帳號被盜，試玩檔其實是惡意程式，你的登入資料遭竊。"
+   },
+   {
+    "good": "打電話後才知道朋友沒有寄檔案，你沒執行惡意程式。",
+    "bad": "檔案確實是朋友的作品，但你聯絡上他時已過截止時間，他少了試玩回饋。"
+   }
+  ],
+  "goodRates": [
+   10,
+   90
+  ]
+ },
+ {
+  "title": "限額工讀，先填資料才有位子？",
+  "scene": "社團群組有人貼出活動工讀，時薪不錯，名額只剩一個。報名連結要填姓名、電話和履歷，但你不認識發文者。你會……",
+  "options": [
+   "先向主辦單位確認職缺與表單來源。",
+   "先填完資料搶名額，晚點再查。"
+  ],
+  "correct": 0,
+  "reason": "群組裡的連結不代表已經查核。提供個人資料前，確認招募單位與資料用途。",
+  "outcomes": [
+   {
+    "good": "真正主辦單位表示沒有徵人，你沒有把履歷交給冒名蒐集資料的人。",
+    "bad": "職缺與表單都是真的，但等到確認完成，最後一個名額已經額滿。"
+   },
+   {
+    "good": "確實是主辦單位招募，你及時報名，順利拿到工讀機會。",
+    "bad": "表單是冒名蒐集資料，你填的履歷被拿去設計針對你的詐騙訊息。"
+   }
+  ],
+  "goodRates": [
+   90,
+   10
+  ]
+ },
+ {
+  "title": "稀有造型，先交貨再付款？",
+  "scene": "玩家想買你的稀有造型，貼出過往交易好評，說他一向先收物品再轉帳。現在就能成交，你會……",
+  "options": [
+   "好評很多，先把造型交易給他。",
+   "不先交物品，要求有保障的交易方式。"
+  ],
+  "correct": 1,
+  "reason": "好評不能保證對方履約。先交物品、事後付款有風險，應確認平台支援與交易保障。",
+  "outcomes": [
+   {
+    "good": "買家確實誠實，收到造型後立刻依約轉帳，交易順利完成。",
+    "bad": "買家收走造型後封鎖你，好評也被發現是偽造的。"
+   },
+   {
+    "good": "對方拒絕任何有保障的方式，你沒有交出造型，物品仍在。",
+    "bad": "買家原本真的會付款，但不願改交易方式，轉而向別人購買，你錯過成交。"
+   }
+  ],
+  "goodRates": [
+   10,
+   90
+  ]
+ },
+ {
+  "title": "搜尋第一個，就是官方客服？",
+  "scene": "筆電出問題，你搜尋品牌客服，第一個結果標示「贊助」。客服說可以透過遠端工具協助修復，但你還沒核對他的身分。你會……",
+  "options": [
+   "先停下，從產品內的支援入口確認。",
+   "先讓他遠端連線，趕快把電腦修好。"
+  ],
+  "correct": 0,
+  "reason": "搜尋排名和廣告不等於官方認證。遠端支援可能合法，但授權前要先核實對方身分。",
+  "outcomes": [
+   {
+    "good": "官方確認剛才是假客服，你沒有交出控制權，也避開假維修費。",
+    "bad": "對方其實是真正客服，但等你再次聯絡時已下班，報告延到隔天才能繼續。"
+   },
+   {
+    "good": "對方確實是品牌客服，成功排除故障，你及時完成報告。",
+    "bad": "假客服連線後假裝掃出病毒，向你收走一筆不必要的維修費。"
+   }
+  ],
+  "goodRates": [
+   90,
+   10
+  ]
+ },
+ {
+  "title": "神祕禮物，掃碼看誰送的？",
+  "scene": "你收到寫著自己姓名的包裹，卡片寫著「掃碼登入查看寄件者」。頁面看起來像購物平台，但你沒有印象買過。你會……",
+  "options": [
+   "先不登入，查證不到來源就退回包裹。",
+   "包裹有我的名字，直接掃碼登入看看。"
+  ],
+  "correct": 0,
+  "reason": "真實姓名與實體包裹都不能保證連結可信。可自行開啟官方 App 查詢，避免在未知頁面輸入帳密。",
+  "outcomes": [
+   {
+    "good": "查詢後發現來源可疑，你沒有在釣魚頁面交出帳號密碼。",
+    "bad": "其實是朋友從正規平台送的生日禮物；你退回包裹，讓朋友多付一次運費。"
+   },
+   {
+    "good": "連結確實是正規平台，登入後看見朋友的生日祝福，順利收下禮物。",
+    "bad": "頁面是仿造的購物網站，你的帳號密碼被騙走。"
+   }
+  ],
+  "goodRates": [
+   90,
+   10
+  ]
+ },
+ {
+  "title": "疑似密碼外洩，要一起換掉？",
+  "scene": "你把同一組十六碼密碼用在論壇、信箱與購物網站。論壇公告疑似密碼外洩，正在調查，其他帳號目前仍正常。你會……",
+  "options": [
+   "先等調查結果，暫時不改密碼。",
+   "先換掉重複密碼，各帳號分開用。"
+  ],
+  "correct": 1,
+  "reason": "帳號仍正常不代表密碼安全。不同帳號應用不同密碼；改密碼時也要妥善保存，避免自己無法登入。",
+  "outcomes": [
+   {
+    "good": "調查確認是誤報，你的帳號未受影響，也沒花時間改密碼。",
+    "bad": "外洩是真的，舊密碼被拿去試登入，你的購物帳號也遭登入。"
+   },
+   {
+    "good": "外洩是真的，但你已換掉重複密碼，對方拿舊密碼登入失敗。",
+    "bad": "最後確認是誤報；你卻沒保存好新密碼，多花一晚恢復帳號存取。"
+   }
+  ],
+  "goodRates": [
+   10,
+   90
+  ]
+ }
+];
+let current = 0;
+let revealed = false;
+let alternate = false;
+let results = [];
+// 用一個隨機值決定第一組好壞配對，A 好則 B 壞；另一組全部反轉。
+function isGood(draw, rate){ return draw < rate / 100; }
+const $ = id => document.getElementById(id);
+function render(){
+ const q = questions[current];
+ $('count').textContent = `第 ${current + 1} / ${questions.length} 題`;
+ $('bar').style.width = `${(current + 1) / questions.length * 100}%`;
+ $('title').textContent = q.title;
+ $('scene').textContent = q.scene;
+ $('phase').textContent = revealed ? `較低風險選擇：${q.correct === 0 ? 'A' : 'B'}` : '討論時間';
+ $('choices').replaceChildren();
+ q.options.forEach((option,i)=>{
+  const good = revealed ? (alternate ? !results[current][i] : results[current][i]) : false;
+  const card = document.createElement('article');
+  card.className = 'choice' + (revealed ? (i === q.correct ? ' good' : ' bad') : '');
+  const head = document.createElement('div'); head.className = 'choice-head';
+  const letter = document.createElement('span'); letter.className = 'letter'; letter.textContent = i === 0 ? 'A' : 'B';
+  const text = document.createElement('p'); text.className = 'option'; text.textContent = option;
+  head.append(letter,text); card.append(head);
+  if(revealed){const outcome = document.createElement('div'); outcome.className = 'outcome'; const tag = document.createElement('strong');tag.className = good ? 'ending-good' : 'ending-bad';tag.textContent = good ? '好結局' : '壞結局'; const ending = document.createElement('p');ending.textContent = q.outcomes[i][good ? 'good' : 'bad']; const odds=document.createElement('p');odds.className='odds';odds.textContent=`好結局 ${q.goodRates[i]}% ／ 壞結局 ${100-q.goodRates[i]}%`;outcome.append(tag,ending,odds);card.append(outcome);}
+  $('choices').append(card);
+ });
+ $('reason').hidden = !revealed;
+ $('reason').textContent = revealed ? `資安提醒：${q.reason}` : '';
+ $('status').textContent = !revealed ? '選好了嗎？答案公布後就不能反悔囉！' : (alternate ? '如果真相不同，故事也會不一樣。這組不計分。' : (current === questions.length-1 ? '最後一題！加總分數，看看哪隊獲勝。' : '好結局的隊伍加 1 分！記好分數，再迎接下一題。'));
+ $('prev').disabled = current === 0;
+ $('next').disabled = current === questions.length-1;
+ $('reveal').disabled = false;
+ $('reveal').textContent = revealed ? (alternate ? '返回第一組結局' : '查看另一組結局') : '公布答案';
+}
+function closeRules(){ $('rules').open = false; window.scrollTo(0,0); }
+// 開始遊戲一律從第一題重來；返回封面可再次查看規則。
+$('start').addEventListener('click',()=>{
+ current=0;revealed=false;alternate=false;results=[];closeRules();render();
+ $('cover').hidden=true;$('game').hidden=false;$('home').hidden=false;
+ $('title').focus();
+});
+$('home').addEventListener('click',()=>{
+ $('game').hidden=true;$('cover').hidden=false;$('home').hidden=true;
+ window.scrollTo(0,0);$('cover-title').focus();
+});
+$('prev').addEventListener('click',()=>{if(current>0){current--;revealed=false;alternate=false;closeRules();render();}});
+$('next').addEventListener('click',()=>{if(current<questions.length-1){current++;revealed=false;alternate=false;closeRules();render();}});
+function qDraw(){const aGood=isGood(Math.random(),questions[current].goodRates[0]);return [aGood,!aGood];}
+$('reveal').addEventListener('click',()=>{if(revealed){alternate=!alternate;closeRules();render();return;}if(!results[current]) results[current]=qDraw();revealed=true;closeRules();render();});
+render();
+</script>
+</body>
+</html>
